@@ -4,7 +4,7 @@ export default defineConfig({
   title: "Cronflow",
   description: "The Fastest Code-First Workflow Automation Engine",
   lang: "en-US",
-  outDir: "./build",
+  base: "/",
   head: [
     ["link", { rel: "icon", href: "/favicon.ico" }],
     ["meta", { name: "theme-color", content: "#22c55e" }],
