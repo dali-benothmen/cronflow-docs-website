@@ -48,6 +48,10 @@ export default defineConfig({
       { text: "Guide", link: "/guide/" },
       { text: "API", link: "/api/" },
       { text: "Examples", link: "/examples/" },
+      {
+        text: "Playground",
+        link: "https://codesandbox.io/p/devbox/7y32yq",
+      },
       { text: "GitHub", link: "https://github.com/dali-benothmen/cronflow" },
     ],
     sidebar: {
