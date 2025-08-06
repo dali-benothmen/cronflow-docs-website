@@ -12,6 +12,33 @@ export default defineConfig({
       "meta",
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
     ],
+    [
+      "style",
+      {},
+      `
+        :root {
+          --vp-c-brand: #22c55e;
+          --vp-c-brand-light: #4ade80;
+          --vp-c-brand-lighter: #86efac;
+          --vp-c-brand-dark: #16a34a;
+          --vp-c-brand-darker: #15803d;
+          --vp-c-brand-highlight: #22c55e;
+          --vp-c-brand-hover: #4ade80;
+          --vp-c-brand-active: #16a34a;
+          
+          /* Override indigo colors with green variations */
+          --vp-c-indigo-1: #22c55e;
+          --vp-c-indigo-2: #4ade80;
+          --vp-c-indigo-3: #22c55e;
+          --vp-c-indigo-soft: rgba(34, 197, 94, 0.14);
+          
+          /* Override purple colors with green variations */
+          --vp-c-purple-1: #22c55e;
+          --vp-c-purple-2: #4ade80;
+          --vp-c-purple-3: #22c55e;
+        }
+      `,
+    ],
   ],
   themeConfig: {
     logo: "/logo.png",
