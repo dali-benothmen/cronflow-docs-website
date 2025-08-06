@@ -174,6 +174,11 @@ features:
   transform: none !important;
 }
 
+/* Fix image container positioning */
+.image-container[data-v-89d2fc22] {
+  transform: none !important;
+}
+
 /* Hero background effects */
 :root {
   --vp-home-hero-image-background-image: linear-gradient(
@@ -228,7 +233,7 @@ features:
   z-index: -1;
 }
 
-/* Enhanced white box container for the image with smooth animation */
+/* Enhanced white box container for the image */
 .VPHomeHero .image img {
   z-index: 1;
   background: white;
@@ -243,18 +248,9 @@ features:
     0 0 80px rgba(34, 197, 94, 0.2);
   padding: 20px;
   border: 3px solid #22c55e;
-  animation: float 3s ease-in-out infinite;
 }
 
-/* Smooth up and down floating animation */
-@keyframes float {
-  0%, 100% {
-    transform: rotate(5deg) translateY(0px);
-  }
-  50% {
-    transform: rotate(5deg) translateY(-10px);
-  }
-}
+/* Performance Benchmark Styles - Static Only (No Animations) */
 .performance-benchmark {
   margin: 2rem auto;
   padding: 2rem;
@@ -265,27 +261,15 @@ features:
       0 0 40px rgba(34, 197, 94, 0.2);
   border: 2px solid rgba(34, 197, 94, 0.3);
   backdrop-filter: blur(10px);
-  animation: slideInUp 0.8s ease-out;
-}
-
-@keyframes slideInUp {
-  from {
-      opacity: 0;
-      transform: translateY(30px);
-  }
-  to {
-      opacity: 1;
-      transform: translateY(0);
-  }
 }
 
 .benchmark-title {
   text-align: center;
   margin-top: 0 !important;
-  margin-bottom: 4rem; /* Increased space from 3rem to 4rem */
+  margin-bottom: 4rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--vp-c-text-1); /* Compatible with light/dark modes */
+  color: var(--vp-c-text-1);
   position: relative;
 }
 
@@ -307,7 +291,7 @@ features:
 }
 
 .bench a {
-  color: var(--vp-c-text-1); /* Compatible with light/dark modes */
+  color: var(--vp-c-text-1);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -332,24 +316,24 @@ features:
 }
 
 .zapier-bar {
-  width: 105%; /* Extended to exceed 30s pole completely */
+  width: 105%;
 }
 
 .benchmark-details {
   margin-top: 2rem;
   padding: 1rem;
-  background: var(--vp-c-bg-soft); /* Compatible with light/dark modes */
+  background: var(--vp-c-bg-soft);
   border-radius: 12px;
-  border: 1px solid var(--vp-c-divider); /* Compatible with light/dark modes */
-  max-width: 800px; /* Same width as benchmark */
+  border: 1px solid var(--vp-c-divider);
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .detail-item {
-  margin-bottom: 0.25rem; /* Smaller spacing */
-  font-size: 0.8rem; /* Smaller text */
-  color: var(--vp-c-text-2); /* Compatible with light/dark modes */
+  margin-bottom: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
   line-height: 1.3;
 }
 
@@ -358,7 +342,7 @@ features:
 }
 
 .detail-item strong {
-  color: var(--vp-c-text-1); /* Compatible with light/dark modes */
+  color: var(--vp-c-text-1);
 }
 
 /* Responsive design */
@@ -381,5 +365,4 @@ features:
       width: 100px !important;
   }
 }
-
 </style>
