@@ -7,21 +7,21 @@ Learn the fundamental building blocks of Cronflow workflows.
 The `cronflow.define()` method creates a new workflow with its configuration and settings.
 
 ```typescript
-import { cronflow } from 'cronflow';
+import { cronflow } from "cronflow";
 
 const workflow = cronflow.define({
-  id: 'my-workflow',
-  name: 'My First Workflow',
-  description: 'A simple workflow example',
-  tags: ['example', 'basic'],
+  id: "my-workflow",
+  name: "My First Workflow",
+  description: "A simple workflow example",
+  tags: ["example", "basic"],
   concurrency: 5,
-  timeout: '5m',
+  timeout: "5m",
   hooks: {
-    onSuccess: ctx => {
-      console.log('✅ Workflow completed successfully');
+    onSuccess: (ctx) => {
+      console.log("✅ Workflow completed successfully");
     },
-    onFailure: ctx => {
-      console.error('❌ Workflow failed:', ctx.error);
+    onFailure: (ctx) => {
+      console.error("❌ Workflow failed:", ctx.error);
     },
   },
 });
@@ -45,19 +45,19 @@ Steps are the primary units of work that produce output and can be referenced by
 
 ```typescript
 workflow
-  .step('fetch-data', async ctx => {
+  .step("fetch-data", async (ctx) => {
     // Fetch data from an API
-    const response = await fetch('https://api.example.com/data');
+    const response = await fetch("https://api.example.com/data");
     const data = await response.json();
 
     return { items: data, count: data.length };
   })
-  .step('process-data', async ctx => {
+  .step("process-data", async (ctx) => {
     // Access previous step output
-    const { items, count } = ctx.steps['fetch-data'].output;
+    const { items, count } = ctx.steps["fetch-data"].output;
 
     // Process the data
-    const processed = items.map(item => ({
+    const processed = items.map((item) => ({
       ...item,
       processed: true,
       timestamp: new Date().toISOString(),
@@ -76,21 +76,21 @@ workflow
 
 ## Actions
 
-Actions are similar to steps but their output is ignored. Use them for side effects like sending emails or logging.
+Actions are similar to steps but their output is ignored and they will run in the background. Use them for side effects like sending emails or logging.
 
 ```typescript
 workflow
-  .step('create-user', async ctx => {
+  .step("create-user", async (ctx) => {
     const user = await db.users.create({
       data: { email: ctx.payload.email, name: ctx.payload.name },
     });
     return user;
   })
-  .action('send-welcome-email', async ctx => {
+  .action("send-welcome-email", async (ctx) => {
     // Send email (output ignored)
     await emailService.sendWelcomeEmail(ctx.last.email);
   })
-  .action('log-creation', async ctx => {
+  .action("log-creation", async (ctx) => {
     // Log to console (output ignored)
     console.log(`User created: ${ctx.last.email}`);
   });
@@ -109,24 +109,24 @@ Conditions allow you to create dynamic workflows that branch based on data or lo
 
 ```typescript
 workflow
-  .step('fetch-order', async ctx => {
+  .step("fetch-order", async (ctx) => {
     const order = await db.orders.findUnique({
       where: { id: ctx.payload.orderId },
     });
     return order;
   })
-  .if('is-high-value', ctx => ctx.last.amount > 500)
-  .step('send-vip-notification', async ctx => {
-    await slack.sendMessage('#vip', `VIP Order: $${ctx.last.amount}`);
+  .if("is-high-value", (ctx) => ctx.last.amount > 500)
+  .step("send-vip-notification", async (ctx) => {
+    await slack.sendMessage("#vip", `VIP Order: $${ctx.last.amount}`);
     return { vipNotified: true };
   })
-  .elseIf('is-medium-value', ctx => ctx.last.amount > 100)
-  .step('send-standard-notification', async ctx => {
-    await slack.sendMessage('#orders', `Order: $${ctx.last.amount}`);
+  .elseIf("is-medium-value", (ctx) => ctx.last.amount > 100)
+  .step("send-standard-notification", async (ctx) => {
+    await slack.sendMessage("#orders", `Order: $${ctx.last.amount}`);
     return { standardNotified: true };
   })
   .else()
-  .step('log-basic-order', async ctx => {
+  .step("log-basic-order", async (ctx) => {
     console.log(`Basic order: ${ctx.last.id}`);
     return { logged: true };
   })
@@ -151,13 +151,13 @@ await cronflow.start();
 // With custom configuration
 await cronflow.start({
   webhookServer: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 3000,
     maxConnections: 1000,
   },
 });
 
-console.log('🚀 Cronflow engine started');
+console.log("🚀 Cronflow engine started");
 ```
 
 ### Startup Options
@@ -175,8 +175,8 @@ Triggers define how workflows are activated. Here are the basic trigger types:
 ### Webhook Trigger
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
-  method: 'POST',
+workflow.onWebhook("/webhooks/orders", {
+  method: "POST",
   schema: z.object({
     orderId: z.string(),
     amount: z.number().positive(),
@@ -188,28 +188,28 @@ workflow.onWebhook('/webhooks/orders', {
 
 ```typescript
 // Run daily at 2 AM
-workflow.onSchedule('0 2 * * *');
+workflow.onSchedule("0 2 * * *");
 
 // Run every 15 minutes
-workflow.onInterval('15m');
+workflow.onInterval("15m");
 ```
 
 ### Event Trigger
 
 ```typescript
 // Trigger on custom events
-workflow.onEvent('user.registered');
+workflow.onEvent("user.registered");
 
 // Publish events from other workflows
-await cronflow.publishEvent('user.registered', { userId: '123' });
+await cronflow.publishEvent("user.registered", { userId: "123" });
 ```
 
 ### Manual Trigger
 
 ```typescript
 // Trigger workflow programmatically
-await cronflow.trigger('my-workflow', {
-  data: 'some payload',
+await cronflow.trigger("my-workflow", {
+  data: "some payload",
 });
 ```
 
@@ -218,22 +218,22 @@ await cronflow.trigger('my-workflow', {
 Here's a complete workflow that demonstrates all basic concepts:
 
 ```typescript
-import { cronflow } from 'cronflow';
-import { z } from 'zod';
+import { cronflow } from "cronflow";
+import { z } from "zod";
 
 // Define the workflow
 const userWorkflow = cronflow.define({
-  id: 'user-onboarding',
-  name: 'User Onboarding Workflow',
-  description: 'Handles new user registration and setup',
-  tags: ['auth', 'onboarding'],
+  id: "user-onboarding",
+  name: "User Onboarding Workflow",
+  description: "Handles new user registration and setup",
+  tags: ["auth", "onboarding"],
   concurrency: 10,
-  timeout: '5m',
+  timeout: "5m",
   hooks: {
-    onSuccess: ctx => {
+    onSuccess: (ctx) => {
       console.log(`✅ User ${ctx.payload.email} onboarded successfully`);
     },
-    onFailure: ctx => {
+    onFailure: (ctx) => {
       console.error(
         `❌ Onboarding failed for ${ctx.payload.email}:`,
         ctx.error
@@ -243,28 +243,28 @@ const userWorkflow = cronflow.define({
 });
 
 // Define webhook trigger
-userWorkflow.onWebhook('/webhooks/user-signup', {
+userWorkflow.onWebhook("/webhooks/user-signup", {
   schema: z.object({
     email: z.string().email(),
     name: z.string().min(1),
-    plan: z.enum(['free', 'pro', 'enterprise']),
+    plan: z.enum(["free", "pro", "enterprise"]),
   }),
 });
 
 // Define workflow steps
 userWorkflow
-  .step('validate-user', async ctx => {
+  .step("validate-user", async (ctx) => {
     const { email, name, plan } = ctx.payload;
 
     // Check if user exists
     const existingUser = await db.users.findUnique({ where: { email } });
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new Error("User already exists");
     }
 
     return { email, name, plan, validated: true };
   })
-  .step('create-user', async ctx => {
+  .step("create-user", async (ctx) => {
     const user = await db.users.create({
       data: {
         email: ctx.last.email,
@@ -276,69 +276,43 @@ userWorkflow
 
     return { user, created: true };
   })
-  .if('is-enterprise', ctx => ctx.last.user.plan === 'enterprise')
-  .step('setup-enterprise', async ctx => {
+  .if("is-enterprise", (ctx) => ctx.last.user.plan === "enterprise")
+  .step("setup-enterprise", async (ctx) => {
     // Enterprise-specific setup
     await enterpriseService.setupAccount(ctx.last.user.id);
     return { enterpriseSetup: true };
   })
-  .elseIf('is-pro', ctx => ctx.last.user.plan === 'pro')
-  .step('setup-pro', async ctx => {
+  .elseIf("is-pro", (ctx) => ctx.last.user.plan === "pro")
+  .step("setup-pro", async (ctx) => {
     // Pro-specific setup
     await proService.setupAccount(ctx.last.user.id);
     return { proSetup: true };
   })
   .else()
-  .step('setup-free', async ctx => {
+  .step("setup-free", async (ctx) => {
     // Free tier setup
     await freeService.setupAccount(ctx.last.user.id);
     return { freeSetup: true };
   })
   .endIf()
-  .action('send-welcome-email', async ctx => {
+  .action("send-welcome-email", async (ctx) => {
     await emailService.sendWelcomeEmail(
-      ctx.steps['create-user'].output.user.email
+      ctx.steps["create-user"].output.user.email
     );
   })
-  .action('log-onboarding', async ctx => {
-    console.log(`User ${ctx.steps['create-user'].output.user.email} onboarded`);
+  .action("log-onboarding", async (ctx) => {
+    console.log(`User ${ctx.steps["create-user"].output.user.email} onboarded`);
   });
 
 // Start the engine
 await cronflow.start({
   webhookServer: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 3000,
   },
 });
 
-console.log('🚀 User onboarding workflow ready');
-```
-
-## Context Object
-
-The `ctx` object provides access to workflow data and utilities:
-
-```typescript
-async function stepHandler(ctx) {
-  // Access trigger payload
-  const { userId, data } = ctx.payload;
-
-  // Access previous step outputs
-  const userData = ctx.steps['fetch-user'].output;
-
-  // Access run metadata
-  console.log(`Run ID: ${ctx.run.id}`);
-
-  // Use persistent state
-  await ctx.state.set('last-processed', Date.now());
-  const lastProcessed = await ctx.state.get('last-processed');
-
-  // Convenience property for previous step
-  const previousResult = ctx.last;
-
-  return { processed: true };
-}
+console.log("🚀 User onboarding workflow ready");
 ```
 
 ## What's Next?
