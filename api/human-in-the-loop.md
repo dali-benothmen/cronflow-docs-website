@@ -7,9 +7,9 @@ Functions for managing workflows that require human approval.
 Resumes a workflow paused by `.humanInTheLoop()`.
 
 ```typescript
-await cronflow.resume('approval_token_123', {
+await cronflow.resume("approval_token_123", {
   approved: true,
-  reason: 'Looks good to me',
+  reason: "Looks good to me",
 });
 ```
 
