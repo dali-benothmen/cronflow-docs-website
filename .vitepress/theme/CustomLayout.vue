@@ -19,21 +19,21 @@ const { Layout } = DefaultTheme;
           </div>
 
           <div class="benchmark-item">
-            <span class="platform-name">Make.com</span>
-            <div class="slider-container">
-              <div class="slider-placeholder"></div>
-              <div class="slider-progress make-progress"></div>
-            </div>
-            <span class="time-label">3.5s</span>
-          </div>
-
-          <div class="benchmark-item">
             <span class="platform-name">n8n</span>
             <div class="slider-container">
               <div class="slider-placeholder"></div>
               <div class="slider-progress n8n-progress"></div>
             </div>
-            <span class="time-label">4s</span>
+            <span class="time-label">15s</span>
+          </div>
+
+          <div class="benchmark-item">
+            <span class="platform-name">Make.com</span>
+            <div class="slider-container">
+              <div class="slider-placeholder"></div>
+              <div class="slider-progress make-progress"></div>
+            </div>
+            <span class="time-label">20s</span>
           </div>
 
           <div class="benchmark-item">
@@ -47,9 +47,11 @@ const { Layout } = DefaultTheme;
 
           <div class="benchmark-description">
             <p>
+              We ran a 12-step computational heavy workflow (No API calls).
+              <br />
               Cronflow runs on a free Oracle VPS (1vCPU, 1GB RAM) at $0/month,
-              while Make.com ($16/month Pro), n8n ($50/month Pro), and Zapier
-              ($19.99/month Pro) run on cloud platforms.
+              while Make.com ($16/month Pro), n8n ($20/month Starter), and
+              Zapier ($19.99/month Pro) run on cloud platforms.
             </p>
           </div>
         </div>
@@ -125,19 +127,19 @@ const { Layout } = DefaultTheme;
 }
 
 .cronflow-progress {
-  animation-duration: 1s;
-}
-
-.make-progress {
-  animation-duration: 4s;
+  animation-duration: 0.1s;
 }
 
 .n8n-progress {
-  animation-duration: 5s;
+  animation-duration: 10s;
+}
+
+.make-progress {
+  animation-duration: 15s;
 }
 
 .zapier-progress {
-  animation-duration: 8s;
+  animation-duration: 20s;
 }
 
 .time-label {
@@ -185,15 +187,70 @@ const { Layout } = DefaultTheme;
   --target-width: 4%;
 }
 
-.make-progress {
-  --target-width: 25%;
+.n8n-progress {
+  --target-width: 50%;
 }
 
-.n8n-progress {
-  --target-width: 30%;
+.make-progress {
+  --target-width: 67%;
 }
 
 .zapier-progress {
   --target-width: 100%;
+}
+
+/* Fix image container positioning */
+.image-container[data-v-89d2fc22] {
+  transform: none !important;
+}
+
+/* More specific selectors for build mode */
+.VPHomeHero .image-container {
+  transform: none !important;
+}
+
+.VPHomeHero .image-container[data-v-89d2fc22] {
+  transform: none !important;
+}
+
+/* Target any image container in the hero */
+.VPHomeHero .image .image-container {
+  transform: none !important;
+}
+
+/* Override any transform on image containers */
+div[class*="image-container"] {
+  transform: none !important;
+}
+
+/* Ensure logo stays in proper position */
+.VPNav .logo {
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* Additional build-mode specific overrides */
+.VPHomeHero .image img {
+  z-index: 1;
+  background: white;
+  border-radius: 20px;
+  transform: rotate(5deg) !important;
+  top: 15%;
+  left: 45%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 40px rgba(34, 197, 94, 0.3), 0 0 80px rgba(34, 197, 94, 0.2);
+  padding: 20px;
+  border: 3px solid #22c55e;
+}
+
+/* Force override any VitePress default transforms */
+.VPHomeHero .image-container,
+.VPHomeHero .image-container *,
+.VPHomeHero .image > div {
+  transform: none !important;
 }
 </style>

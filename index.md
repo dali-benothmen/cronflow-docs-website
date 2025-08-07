@@ -101,7 +101,7 @@ features:
           <strong>Make.com:</strong> Cloud Platform • $16/month Pro
       </div>
       <div class="detail-item">
-          <strong>n8n:</strong> Cloud Platform • $50/month Pro
+          <strong>n8n:</strong> Cloud Platform • $20/month Starter
       </div>
       <div class="detail-item">
           <strong>Zapier:</strong> Cloud Platform • $19.99/month Pro
@@ -162,21 +162,6 @@ features:
 .VPHomeHero .actions .VPButton.brand:hover {
   background-color: #4ade80 !important;
   border-color: #4ade80 !important;
-}
-
-/* Ensure logo stays in proper position */
-.VPNav .logo {
-  position: relative !important;
-  top: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
-}
-
-/* Fix image container positioning */
-.image-container[data-v-89d2fc22] {
-  transform: none !important;
 }
 
 /* Hero background effects */
