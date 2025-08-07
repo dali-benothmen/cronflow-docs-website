@@ -39,7 +39,7 @@ pnpm add cronflow
 Cronflow is built with TypeScript and includes full type definitions. No additional `@types` package is needed.
 
 ```typescript
-import { cronflow } from 'cronflow';
+import { cronflow } from "cronflow";
 // Full TypeScript support out of the box
 ```
 
@@ -62,5 +62,5 @@ Cronflow supports the following platforms:
 
 - **Node.js**: 18.0.0 or higher
 - **Bun**: 1.0.0 or higher (recommended)
-- **Memory**: Minimum 512MB RAM
+- **Memory**: Minimum 200MB RAM
 - **Disk**: 50MB free space
