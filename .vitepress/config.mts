@@ -214,7 +214,7 @@ export default defineConfig({
       { icon: "github", link: "https://github.com/dali-benothmen/cronflow" },
     ],
     footer: {
-      message: "Released under the MIT License.",
+      message: "Released under the Apache 2.0 License.",
       copyright: "Copyright © 2025-present Cronflow",
     },
     search: {
