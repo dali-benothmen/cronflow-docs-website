@@ -3,7 +3,7 @@ layout: home
 hero:
   name: "Cronflow"
   text: "The Fastest Code-First Workflow Automation Engine"
-  tagline: Built with Rust + Bun for unparalleled performance. Replace your entire n8n infrastructure with a single package.
+  tagline: Built with Rust + Bun for unparalleled performance. Replace complex workflow infrastructure with a single package.
   image:
     src: /code.png
     alt: Cronflow Code
