@@ -19,23 +19,23 @@ Webhook triggers create HTTP endpoints that can receive external requests and st
 ### Basic Webhook
 
 ```typescript
-import { cronflow } from 'cronflow';
+import { cronflow } from "cronflow";
 
 const workflow = cronflow.define({
-  id: 'order-processor',
-  name: 'Order Processing Workflow',
+  id: "order-processor",
+  name: "Order Processing Workflow",
 });
 
 workflow
-  .onWebhook('/webhooks/orders', {
-    method: 'POST',
+  .onWebhook("/webhooks/orders", {
+    method: "POST",
     schema: z.object({
       orderId: z.string().uuid(),
       customerId: z.string(),
       amount: z.number().positive(),
     }),
   })
-  .step('process-order', async ctx => {
+  .step("process-order", async (ctx) => {
     return await processOrder(ctx.payload);
   });
 ```
@@ -43,17 +43,17 @@ workflow
 ### Webhook with Headers Validation
 
 ```typescript
-workflow.onWebhook('/webhooks/stripe', {
-  method: 'POST',
+workflow.onWebhook("/webhooks/stripe", {
+  method: "POST",
   headers: {
     required: {
-      'stripe-signature': 'whsec_...',
-      'content-type': 'application/json',
+      "stripe-signature": "whsec_...",
+      "content-type": "application/json",
     },
-    validate: headers => {
+    validate: (headers) => {
       // Custom header validation
-      if (!headers['user-agent']?.includes('Stripe')) {
-        return 'Invalid user agent';
+      if (!headers["user-agent"]?.includes("Stripe")) {
+        return "Invalid user agent";
       }
       return true;
     },
@@ -74,18 +74,18 @@ workflow.onWebhook('/webhooks/stripe', {
 ### Webhook with Framework Integration
 
 ```typescript
-import express from 'express';
+import express from "express";
 
 const app = express();
 
 const workflow = cronflow.define({
-  id: 'api-workflow',
+  id: "api-workflow",
 });
 
-workflow.onWebhook('/api/orders', {
-  app: 'express',
+workflow.onWebhook("/api/orders", {
+  app: "express",
   appInstance: app,
-  method: 'POST',
+  method: "POST",
   schema: z.object({
     orderId: z.string(),
     items: z.array(
@@ -98,17 +98,30 @@ workflow.onWebhook('/api/orders', {
 });
 ```
 
+### Custom Framework Integration
+
+When your framework is not natively supported, you can use the `registerRoute` option to integrate with any framework:
+
+```typescript
+// Custom framework integration
+workflow.onWebhook("/custom/webhook", {
+  registerRoute: (method, path, handler) => {
+    myFramework[method.toLowerCase()](path, handler);
+  },
+});
+```
+
 ### Webhook Response Handling
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
-  method: 'POST',
-  trigger: 'process-order', // Trigger specific step
-  onSuccess: ctx => {
-    console.log('✅ Webhook processed successfully');
+workflow.onWebhook("/webhooks/orders", {
+  method: "POST",
+  trigger: "process-order", // Trigger specific step
+  onSuccess: (ctx) => {
+    console.log("✅ Webhook processed successfully");
   },
   onError: (ctx, error) => {
-    console.error('❌ Webhook processing failed:', error);
+    console.error("❌ Webhook processing failed:", error);
   },
 });
 ```
@@ -120,49 +133,49 @@ Schedule triggers execute workflows at specified times using cron expressions.
 ### Basic Schedule
 
 ```typescript
-workflow.onSchedule('0 2 * * *'); // Run at 2 AM daily
+workflow.onSchedule("0 2 * * *"); // Run at 2 AM daily
 ```
 
 ### Common Schedule Patterns
 
 ```typescript
 // Every minute
-workflow.onSchedule('* * * * *');
+workflow.onSchedule("* * * * *");
 
 // Every hour
-workflow.onSchedule('0 * * * *');
+workflow.onSchedule("0 * * * *");
 
 // Every day at midnight
-workflow.onSchedule('0 0 * * *');
+workflow.onSchedule("0 0 * * *");
 
 // Every Monday at 9 AM
-workflow.onSchedule('0 9 * * 1');
+workflow.onSchedule("0 9 * * 1");
 
 // Every 15 minutes
-workflow.onSchedule('*/15 * * * *');
+workflow.onSchedule("*/15 * * * *");
 
 // First day of every month
-workflow.onSchedule('0 0 1 * *');
+workflow.onSchedule("0 0 1 * *");
 ```
 
 ### Interval-based Scheduling
 
 ```typescript
 // Every 5 minutes
-workflow.onInterval('5m');
+workflow.onInterval("5m");
 
 // Every 2 hours
-workflow.onInterval('2h');
+workflow.onInterval("2h");
 
 // Every day
-workflow.onInterval('1d');
+workflow.onInterval("1d");
 ```
 
 ### Schedule with Timezone
 
 ```typescript
-workflow.onSchedule('0 9 * * 1', {
-  timezone: 'America/New_York',
+workflow.onSchedule("0 9 * * 1", {
+  timezone: "America/New_York",
 });
 ```
 
@@ -173,33 +186,33 @@ Event triggers allow workflows to respond to custom events published by your app
 ### Basic Event Trigger
 
 ```typescript
-workflow.onEvent('user.registered');
+workflow.onEvent("user.registered");
 ```
 
 ### Publishing Events
 
 ```typescript
-import { cronflow } from 'cronflow';
+import { cronflow } from "cronflow";
 
 // Publish an event
-await cronflow.publishEvent('user.registered', {
-  userId: '123',
-  email: 'user@example.com',
+await cronflow.publishEvent("user.registered", {
+  userId: "123",
+  email: "user@example.com",
   timestamp: new Date(),
 });
 
 // Publish with additional data
-await cronflow.publishEvent('order.completed', {
-  orderId: '456',
+await cronflow.publishEvent("order.completed", {
+  orderId: "456",
   amount: 99.99,
-  customerId: '789',
+  customerId: "789",
 });
 ```
 
 ### Event with Payload Validation
 
 ```typescript
-workflow.onEvent('order.created', {
+workflow.onEvent("order.created", {
   schema: z.object({
     orderId: z.string(),
     customerId: z.string(),
@@ -222,64 +235,16 @@ workflow.manual();
 
 ```typescript
 // Trigger the workflow
-const runId = await cronflow.trigger('order-processor', {
-  orderId: '123',
-  customerId: '456',
+const runId = await cronflow.trigger("order-processor", {
+  orderId: "123",
+  customerId: "456",
   items: [
-    { id: 'item1', quantity: 2 },
-    { id: 'item2', quantity: 1 },
+    { id: "item1", quantity: 2 },
+    { id: "item2", quantity: 1 },
   ],
 });
 
-console.log('Workflow started with run ID:', runId);
-```
-
-## Polling Triggers
-
-Polling triggers automatically check for new data and trigger workflows when conditions are met.
-
-### Basic Polling
-
-```typescript
-workflow.onPoll(async ctx => {
-  const newOrders = await db.orders.findMany({
-    where: { status: 'pending' },
-    take: 10,
-  });
-
-  return newOrders.map(order => ({
-    id: order.id,
-    payload: order,
-  }));
-});
-```
-
-### Polling with Conditions
-
-```typescript
-workflow.onPoll(async ctx => {
-  const pendingOrders = await db.orders.findMany({
-    where: {
-      status: 'pending',
-      createdAt: {
-        gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24 hours
-      },
-    },
-  });
-
-  if (pendingOrders.length === 0) {
-    return []; // No triggers
-  }
-
-  return pendingOrders.map(order => ({
-    id: `order_${order.id}`,
-    payload: {
-      orderId: order.id,
-      customerId: order.customerId,
-      amount: order.amount,
-    },
-  }));
-});
+console.log("Workflow started with run ID:", runId);
 ```
 
 ## Advanced Trigger Configurations
@@ -290,23 +255,23 @@ Workflows can have multiple triggers:
 
 ```typescript
 workflow
-  .onWebhook('/webhooks/orders')
-  .onSchedule('0 2 * * *') // Also run daily at 2 AM
-  .onEvent('order.urgent')
+  .onWebhook("/webhooks/orders")
+  .onSchedule("0 2 * * *") // Also run daily at 2 AM
+  .onEvent("order.urgent")
   .manual();
 ```
 
 ### Trigger with Middleware
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
-  method: 'POST',
+workflow.onWebhook("/webhooks/orders", {
+  method: "POST",
   middleware: [
     async (req, res, next) => {
       // Rate limiting
-      const clientId = req.headers['x-client-id'];
+      const clientId = req.headers["x-client-id"];
       if (!clientId) {
-        return res.status(401).json({ error: 'Missing client ID' });
+        return res.status(401).json({ error: "Missing client ID" });
       }
       next();
     },
@@ -314,7 +279,7 @@ workflow.onWebhook('/webhooks/orders', {
       // Authentication
       const token = req.headers.authorization;
       if (!token || !isValidToken(token)) {
-        return res.status(401).json({ error: 'Invalid token' });
+        return res.status(401).json({ error: "Invalid token" });
       }
       next();
     },
@@ -325,9 +290,9 @@ workflow.onWebhook('/webhooks/orders', {
 ### Conditional Triggers
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
-  method: 'POST',
-  condition: req => {
+workflow.onWebhook("/webhooks/orders", {
+  method: "POST",
+  condition: (req) => {
     // Only trigger for orders above $100
     return req.body.amount > 100;
   },
@@ -339,7 +304,7 @@ workflow.onWebhook('/webhooks/orders', {
 ### Schema Validation
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 const orderSchema = z.object({
   orderId: z.string().uuid(),
@@ -358,7 +323,7 @@ const orderSchema = z.object({
   }),
 });
 
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   schema: orderSchema,
 });
 ```
@@ -366,10 +331,10 @@ workflow.onWebhook('/webhooks/orders', {
 ### Custom Validation
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
-  validate: payload => {
+workflow.onWebhook("/webhooks/orders", {
+  validate: (payload) => {
     if (payload.amount > 10000) {
-      return 'Orders above $10,000 require manual review';
+      return "Orders above $10,000 require manual review";
     }
     return true;
   },
@@ -381,15 +346,15 @@ workflow.onWebhook('/webhooks/orders', {
 ### Webhook Error Responses
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   onError: (ctx, error) => {
-    console.error('Webhook processing failed:', error);
+    console.error("Webhook processing failed:", error);
 
     // Return custom error response
     return {
       status: 400,
       body: {
-        error: 'Invalid order data',
+        error: "Invalid order data",
         details: error.message,
       },
     };
@@ -400,10 +365,10 @@ workflow.onWebhook('/webhooks/orders', {
 ### Retry Configuration
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   retry: {
     attempts: 3,
-    backoff: { delay: '5s' },
+    backoff: { delay: "5s" },
   },
 });
 ```
@@ -415,11 +380,11 @@ workflow.onWebhook('/webhooks/orders', {
 ```typescript
 // Get trigger statistics
 const stats = await cronflow.getTriggerStats();
-console.log('Trigger stats:', stats);
+console.log("Trigger stats:", stats);
 
 // Get workflow triggers
-const triggers = await cronflow.getWorkflowTriggers('order-processor');
-console.log('Workflow triggers:', triggers);
+const triggers = await cronflow.getWorkflowTriggers("order-processor");
+console.log("Workflow triggers:", triggers);
 ```
 
 ### Schedule Triggers
@@ -427,7 +392,7 @@ console.log('Workflow triggers:', triggers);
 ```typescript
 // Get all schedule triggers
 const schedules = await cronflow.getScheduleTriggers();
-console.log('Schedule triggers:', schedules);
+console.log("Schedule triggers:", schedules);
 ```
 
 ## Best Practices
@@ -436,18 +401,18 @@ console.log('Schedule triggers:', schedules);
 
 ```typescript
 // ✅ Good: Descriptive paths
-workflow.onWebhook('/webhooks/stripe/payment-succeeded');
-workflow.onWebhook('/webhooks/shopify/order-created');
+workflow.onWebhook("/webhooks/stripe/payment-succeeded");
+workflow.onWebhook("/webhooks/shopify/order-created");
 
 // ❌ Avoid: Generic paths
-workflow.onWebhook('/webhook');
-workflow.onWebhook('/api');
+workflow.onWebhook("/webhook");
+workflow.onWebhook("/api");
 ```
 
 ### 2. Validate Input Data
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   schema: z.object({
     orderId: z.string().uuid(),
     amount: z.number().positive(),
@@ -459,13 +424,13 @@ workflow.onWebhook('/webhooks/orders', {
 ### 3. Handle Errors Gracefully
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   onError: (ctx, error) => {
-    console.error('Webhook error:', error);
+    console.error("Webhook error:", error);
     // Don't throw - return error response
     return {
       status: 400,
-      body: { error: 'Invalid request' },
+      body: { error: "Invalid request" },
     };
   },
 });
@@ -475,19 +440,19 @@ workflow.onWebhook('/webhooks/orders', {
 
 ```typescript
 // For creating resources
-workflow.onWebhook('/webhooks/orders', { method: 'POST' });
+workflow.onWebhook("/webhooks/orders", { method: "POST" });
 
 // For updates
-workflow.onWebhook('/webhooks/orders/:id', { method: 'PUT' });
+workflow.onWebhook("/webhooks/orders/:id", { method: "PUT" });
 
 // For deletions
-workflow.onWebhook('/webhooks/orders/:id', { method: 'DELETE' });
+workflow.onWebhook("/webhooks/orders/:id", { method: "DELETE" });
 ```
 
 ### 5. Implement Rate Limiting
 
 ```typescript
-workflow.onWebhook('/webhooks/orders', {
+workflow.onWebhook("/webhooks/orders", {
   middleware: [
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
