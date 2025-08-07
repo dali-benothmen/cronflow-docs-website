@@ -58,31 +58,31 @@ features:
       <div style="position: absolute; left: 0.4%; top: 0px; height: 20px; margin-left: 8px; font-weight: bold;" class="cronflow-time time-label">
           118ms
       </div>
-      <!-- Make.com Bar -->
-      <div style="position: absolute; left: 0; top: 23px; width: 11.67%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
-      <div style="position: absolute; left: 0; top: 23px; height: 14px; background: #22c55e;" class="bench-bar make-bar"></div>
-      <div style="position: absolute; right: 100%; top: 20px; width: 120px; height: 20px; text-align: right; white-space: nowrap; margin-right: 8px;">
-          <a href="https://make.com/">Make.com</a>
-      </div>
-      <div style="position: absolute; left: 11.67%; top: 20px; height: 20px; margin-left: 8px;" class="make-time time-label">
-          3.5s
-      </div>
       <!-- n8n Bar -->
-      <div style="position: absolute; left: 0; top: 43px; width: 13.33%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
-      <div style="position: absolute; left: 0; top: 43px; height: 14px; background: #22c55e;" class="bench-bar n8n-bar"></div>
-      <div style="position: absolute; right: 100%; top: 40px; width: 120px; height: 20px; text-align: right; white-space: nowrap; margin-right: 8px;">
+      <div style="position: absolute; left: 0; top: 23px; width: 50%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
+      <div style="position: absolute; left: 0; top: 23px; height: 14px; background: #22c55e;" class="bench-bar n8n-bar"></div>
+      <div style="position: absolute; right: 100%; top: 20px; width: 120px; height: 20px; text-align: right; white-space: nowrap; margin-right: 8px;">
           <a href="https://n8n.io/">n8n</a>
       </div>
-      <div style="position: absolute; left: 13.33%; top: 40px; height: 20px; margin-left: 8px;" class="n8n-time time-label">
-          4s
+      <div style="position: absolute; left: 50%; top: 20px; height: 20px; margin-left: 8px;" class="n8n-time time-label">
+          15s
+      </div>
+      <!-- Make.com Bar -->
+      <div style="position: absolute; left: 0; top: 43px; width: 67%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
+      <div style="position: absolute; left: 0; top: 43px; height: 14px; background: #22c55e;" class="bench-bar make-bar"></div>
+      <div style="position: absolute; right: 100%; top: 40px; width: 120px; height: 20px; text-align: right; white-space: nowrap; margin-right: 8px;">
+          <a href="https://make.com/">Make.com</a>
+      </div>
+      <div style="position: absolute; left: 67%; top: 40px; height: 20px; margin-left: 8px;" class="make-time time-label">
+          20s
       </div>
       <!-- Zapier Bar -->
-      <div style="position: absolute; left: 0; top: 63px; width: 105%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
+      <div style="position: absolute; left: 0; top: 63px; width: 100%; height: 14px; background: rgba(191, 191, 191, 0.2);"></div>
       <div style="position: absolute; left: 0; top: 63px; height: 14px; background: #22c55e;" class="bench-bar zapier-bar"></div>
       <div style="position: absolute; right: 100%; top: 60px; width: 120px; height: 20px; text-align: right; white-space: nowrap; margin-right: 8px;">
         <a href="https://zapier.com/">Zapier</a>
       </div>
-      <div style="position: absolute; left: 105%; top: 60px; height: 20px; margin-left: 8px;" class="zapier-time time-label">
+      <div style="position: absolute; left: 100%; top: 60px; height: 20px; margin-left: 8px;" class="zapier-time time-label">
         1min
       </div>
       <!-- Time scale -->
@@ -98,13 +98,16 @@ features:
           <strong>Cronflow:</strong> Free Oracle VPS (1vCPU, 1GB RAM) • $0/month
       </div>
       <div class="detail-item">
-          <strong>Make.com:</strong> Cloud Platform • $16/month Pro
-      </div>
-      <div class="detail-item">
           <strong>n8n:</strong> Cloud Platform • $20/month Starter
       </div>
       <div class="detail-item">
+          <strong>Make.com:</strong> Cloud Platform • $16/month Pro
+      </div>
+      <div class="detail-item">
           <strong>Zapier:</strong> Cloud Platform • $19.99/month Pro
+      </div>
+      <div class="detail-item" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--vp-c-divider);">
+          <em>We ran a 12-step computational heavy workflow (No API calls).</em>
       </div>
   </div>
 </div>
@@ -293,15 +296,15 @@ features:
 }
 
 .make-bar {
-  width: 11.67%;
+  width: 67%;
 }
 
 .n8n-bar {
-  width: 13.33%;
+  width: 50%;
 }
 
 .zapier-bar {
-  width: 105%;
+  width: 100%;
 }
 
 .benchmark-details {
