@@ -20,7 +20,6 @@ const workflow = cronflow.define({
     count: 100,
     per: '1h',
   },
-  queue: 'high-priority',
   version: 'v1.0.0',
   hooks: {
     onSuccess: ctx => {
@@ -45,7 +44,6 @@ const workflow = cronflow.define({
 | `timeout`     | `string \| number` | `'30m'`     | Maximum duration for the entire workflow run (e.g., '10m')                       |
 | `concurrency` | `number`           | `Infinity`  | Maximum number of concurrent runs allowed (1 ensures sequential execution)       |
 | `rateLimit`   | `object`           | -           | Limits execution frequency: `{ count: number, per: string }`                     |
-| `queue`       | `string`           | `'default'` | Assigns workflow to a specific execution queue for prioritization                |
 | `version`     | `string`           | -           | Version string (e.g., 'v1.0.0') to manage multiple workflow versions             |
 | `secrets`     | `object`           | -           | Configuration for fetching secrets from a vault instead of environment variables |
 
@@ -184,27 +182,6 @@ const longWorkflow = cronflow.define({
 const unlimitedWorkflow = cronflow.define({
   id: 'unlimited-workflow',
   timeout: 0, // No timeout
-});
-```
-
-## Queue Management
-
-Assign workflows to specific queues for prioritization:
-
-```typescript
-const highPriorityWorkflow = cronflow.define({
-  id: 'high-priority-workflow',
-  queue: 'high-priority',
-});
-
-const normalWorkflow = cronflow.define({
-  id: 'normal-workflow',
-  queue: 'default',
-});
-
-const lowPriorityWorkflow = cronflow.define({
-  id: 'low-priority-workflow',
-  queue: 'low-priority',
 });
 ```
 
