@@ -10,7 +10,6 @@ Cronflow supports several trigger types:
 - **Schedule Triggers** - Time-based execution using cron expressions
 - **Event Triggers** - Custom events for decoupled workflows
 - **Manual Triggers** - Manual execution via API calls
-- **Polling Triggers** - Automatic data checking
 
 ## Webhook Triggers
 
@@ -494,14 +493,5 @@ Creates an event trigger.
 ### `workflow.manual()`
 
 Creates a manual trigger.
-
-### `workflow.onPoll(pollFunction, options?)`
-
-Creates a polling trigger.
-
-**Parameters:**
-
-- `pollFunction` (function): Polling function
-- `options` (PollOptions, optional): Polling configuration
 
 Triggers are the foundation of workflow automation in Cronflow. Choose the right trigger type for your use case and configure them properly to build robust, reliable workflows.

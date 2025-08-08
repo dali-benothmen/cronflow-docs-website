@@ -5,8 +5,8 @@
 Registers a webhook endpoint to trigger the workflow.
 
 ```typescript
-workflow.onWebhook('/webhooks/stripe', {
-  method: 'POST',
+workflow.onWebhook("/webhooks/stripe", {
+  method: "POST",
   schema: z.object({
     orderId: z.string().uuid(),
     amount: z.number().positive(),
@@ -19,7 +19,7 @@ workflow.onWebhook('/webhooks/stripe', {
 Triggers the workflow based on a CRON string.
 
 ```typescript
-workflow.onSchedule('0 2 * * *'); // Run at 2 AM every day
+workflow.onSchedule("0 2 * * *"); // Run at 2 AM every day
 ```
 
 ## `.onInterval(interval)`
@@ -27,7 +27,7 @@ workflow.onSchedule('0 2 * * *'); // Run at 2 AM every day
 Triggers the workflow at a fixed, human-readable interval.
 
 ```typescript
-workflow.onInterval('15m'); // Run every 15 minutes
+workflow.onInterval("15m"); // Run every 15 minutes
 ```
 
 ## `.onEvent(eventName)`
@@ -35,21 +35,7 @@ workflow.onInterval('15m'); // Run every 15 minutes
 Triggers the workflow when a custom event is published.
 
 ```typescript
-workflow.onEvent('user.registered');
-```
-
-## `.onPoll(pollFn, options?)`
-
-Triggers the workflow for each new item found by a polling function.
-
-```typescript
-workflow.onPoll(async ctx => {
-  const newEmails = await fetchNewEmails();
-  return newEmails.map(email => ({
-    id: email.id,
-    payload: email,
-  }));
-});
+workflow.onEvent("user.registered");
 ```
 
 ## `.manual()`
