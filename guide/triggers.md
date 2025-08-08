@@ -170,14 +170,6 @@ workflow.onInterval("2h");
 workflow.onInterval("1d");
 ```
 
-### Schedule with Timezone
-
-```typescript
-workflow.onSchedule("0 9 * * 1", {
-  timezone: "America/New_York",
-});
-```
-
 ## Event Triggers
 
 Event triggers allow workflows to respond to custom events published by your application.
