@@ -60,6 +60,7 @@ export default defineConfig({
           text: "Getting Started",
           items: [
             { text: "Introduction", link: "/guide/" },
+            { text: "Why Use Cronflow?", link: "/guide/why-use-cronflow" },
             { text: "Installation", link: "/guide/installation" },
             { text: "Quick Start", link: "/guide/quick-start" },
             { text: "Basic Concepts", link: "/guide/basic-concepts" },
