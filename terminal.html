@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terminal Hero Animation</title>
+    <style>
+      body {
+        background: #0d1117;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: monospace;
+      }
+      .terminal {
+        background: #161b22;
+        color: #d1d5db;
+        border-radius: 8px;
+        width: 650px;
+        max-width: 95%;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+      }
+      .terminal-header {
+        background: #1f2937;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot.red {
+        background: #ff5f56;
+      }
+      .dot.yellow {
+        background: #ffbd2e;
+      }
+      .dot.green {
+        background: #27c93f;
+      }
+      .terminal-body {
+        padding: 20px;
+        min-height: 280px;
+        position: relative;
+      }
+      .output {
+        white-space: pre-wrap;
+        line-height: 1.4em;
+      }
+      .press-enter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        color: #9ca3af;
+        cursor: pointer;
+        animation: blink 1.2s infinite;
+        font-size: 14px;
+        display: none;
+      }
+      @keyframes blink {
+        0%,
+        50%,
+        100% {
+          opacity: 1;
+        }
+        25%,
+        75% {
+          opacity: 0.4;
+        }
+      }
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        background: #d1d5db;
+        animation: cursorBlink 1s infinite;
+        margin-left: 2px;
+      }
+      @keyframes cursorBlink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+      .highlight {
+        color: #10b981;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-body">
+        <div class="output">
+          <span id="typedText"></span><span class="cursor"></span>
+        </div>
+        <div class="press-enter" id="pressEnter">[ Press Enter ]</div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const commandText = "$ bun run workflow.js";
+        const typedTextEl = document.getElementById("typedText");
+        const pressEnterEl = document.getElementById("pressEnter");
+        const outputEl = document.querySelector(".output");
+
+        const logLines = [
+          "Step 1: Fetching data...",
+          "Step 2: Processing workflow...",
+          "Step 3: Sending notifications...",
+          "✔ Workflow completed successfully.",
+          "%cExecuted in 118ms | Memory usage: 54MB 🚀",
+        ];
+
+        let cmdIndex = 0;
+
+        function typeCommand() {
+          if (cmdIndex < commandText.length) {
+            typedTextEl.textContent += commandText[cmdIndex];
+            cmdIndex++;
+            setTimeout(typeCommand, 60);
+          } else {
+            setTimeout(() => {
+              pressEnterEl.style.display = "block";
+            }, 300);
+          }
+        }
+
+        function printLogs() {
+          pressEnterEl.style.display = "none";
+          const cursor = document.querySelector(".cursor");
+          if (cursor) cursor.remove();
+
+          let i = 0;
+          function nextLine() {
+            if (i < logLines.length) {
+              if (i === logLines.length - 1) {
+                const span = document.createElement("span");
+                span.innerHTML =
+                  logLines[i].replace("%c", '<span class="highlight">') +
+                  "</span>";
+                outputEl.appendChild(document.createElement("br"));
+                outputEl.appendChild(span);
+              } else {
+                outputEl.appendChild(document.createElement("br"));
+                outputEl.appendChild(document.createTextNode(logLines[i]));
+              }
+              i++;
+              setTimeout(nextLine, 80);
+            }
+          }
+          setTimeout(nextLine, 150);
+        }
+
+        // Start typing on load
+        typeCommand();
+
+        // Handle click and Enter key
+        pressEnterEl.addEventListener("click", printLogs);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") printLogs();
+        });
+      });
+    </script>
+  </body>
+</html>
