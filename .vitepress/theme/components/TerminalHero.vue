@@ -20,7 +20,7 @@
 import { onMounted } from "vue";
 
 onMounted(() => {
-  const commandText = "$ bun run workflow.js";
+  const commandText = "$ node workflow.js";
   const typedTextEl = document.getElementById("typedText");
   const pressEnterEl = document.getElementById("pressEnter");
   const pressEnterOverlayEl = document.getElementById("pressEnterOverlay");
