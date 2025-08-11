@@ -614,32 +614,34 @@ features:
 </style>
 
 <script>
-let dxTerminalInitialized = false;
-let dxTerminalObserver = null;
+// Ensure this only runs on the client side
+if (typeof window !== 'undefined') {
+  let dxTerminalInitialized = false;
+  let dxTerminalObserver = null;
 
-function initDXTerminal() {
-  if (dxTerminalInitialized) return;
-  
-  const commandText = "$ nano workflow.js";
-  const typedTextEl = document.getElementById("dx-typedText");
-  const pressEnterEl = document.getElementById("dx-pressEnter");
-  const pressEnterOverlayEl = document.getElementById("dx-pressEnterOverlay");
-  const terminalEl = document.getElementById("dx-terminal");
-  
-  console.log('Trying to init DX terminal...', { typedTextEl, pressEnterEl, pressEnterOverlayEl });
-  
-  if (!typedTextEl || !pressEnterEl || !pressEnterOverlayEl || !terminalEl) {
-    // Elements not ready yet, try again in 100ms
-    setTimeout(initDXTerminal, 100);
-    return;
-  }
-  
-  dxTerminalInitialized = true;
-  console.log('DX Terminal initializing...');
-  
-  const outputEl = typedTextEl.parentElement;
+  function initDXTerminal() {
+    if (dxTerminalInitialized) return;
+    
+    const commandText = "$ nano workflow.js";
+    const typedTextEl = document.getElementById("dx-typedText");
+    const pressEnterEl = document.getElementById("dx-pressEnter");
+    const pressEnterOverlayEl = document.getElementById("dx-pressEnterOverlay");
+    const terminalEl = document.getElementById("dx-terminal");
+    
+    console.log('Trying to init DX terminal...', { typedTextEl, pressEnterEl, pressEnterOverlayEl });
+    
+    if (!typedTextEl || !pressEnterEl || !pressEnterOverlayEl || !terminalEl) {
+      // Elements not ready yet, try again in 100ms
+      setTimeout(initDXTerminal, 100);
+      return;
+    }
+    
+    dxTerminalInitialized = true;
+    console.log('DX Terminal initializing...');
+    
+    const outputEl = typedTextEl.parentElement;
 
-  const workflowCode = `<span class="keyword">import</span> { <span class="variable">cronflow</span> } <span class="keyword">from</span> <span class="string">'cronflow'</span>;
+    const workflowCode = `<span class="keyword">import</span> { <span class="variable">cronflow</span> } <span class="keyword">from</span> <span class="string">'cronflow'</span>;
 <span class="keyword">import</span> { <span class="variable">z</span> } <span class="keyword">from</span> <span class="string">'zod'</span>;
 
 <span class="comment">// Define AI customer service workflow</span>
@@ -697,89 +699,90 @@ function initDXTerminal() {
     });
   });`;
 
-  let cmdIndex = 0;
+    let cmdIndex = 0;
 
-  function typeCommand() {
-    console.log('Typing character:', cmdIndex, commandText[cmdIndex]);
-    if (cmdIndex < commandText.length) {
-      typedTextEl.textContent += commandText[cmdIndex];
-      cmdIndex++;
-      setTimeout(typeCommand, 60);
-    } else {
-      console.log('Typing complete, showing press enter button');
-      setTimeout(() => {
-        pressEnterOverlayEl.style.display = "flex";
-      }, 300);
+    function typeCommand() {
+      console.log('Typing character:', cmdIndex, commandText[cmdIndex]);
+      if (cmdIndex < commandText.length) {
+        typedTextEl.textContent += commandText[cmdIndex];
+        cmdIndex++;
+        setTimeout(typeCommand, 60);
+      } else {
+        console.log('Typing complete, showing press enter button');
+        setTimeout(() => {
+          pressEnterOverlayEl.style.display = "flex";
+        }, 300);
+      }
     }
+
+    function showCode() {
+      pressEnterOverlayEl.style.display = "none";
+      const cursor = document.getElementById("dx-cursor");
+      if (cursor) cursor.remove();
+
+      // Hide the typed command text
+      typedTextEl.style.display = "none";
+
+      const pre = document.createElement("pre");
+      const code = document.createElement("code");
+      code.innerHTML = workflowCode;
+      pre.appendChild(code);
+      outputEl.appendChild(pre);
+    }
+
+    // Start typing on load
+    setTimeout(typeCommand, 1000);
+
+    // Handle click and Enter key
+    pressEnterEl.addEventListener("click", showCode);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && pressEnterOverlayEl.style.display === "flex") {
+        showCode();
+      }
+    });
   }
 
-  function showCode() {
-    pressEnterOverlayEl.style.display = "none";
-    const cursor = document.getElementById("dx-cursor");
-    if (cursor) cursor.remove();
-
-    // Hide the typed command text
-    typedTextEl.style.display = "none";
-
-    const pre = document.createElement("pre");
-    const code = document.createElement("code");
-    code.innerHTML = workflowCode;
-    pre.appendChild(code);
-    outputEl.appendChild(pre);
+  // Setup intersection observer for lazy loading
+  function setupDXTerminalObserver() {
+    const terminalSection = document.querySelector('.developer-experience-section');
+    
+    if (!terminalSection) {
+      // Try again later if section not ready
+      setTimeout(setupDXTerminalObserver, 100);
+      return;
+    }
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !dxTerminalInitialized) {
+            console.log('DX Terminal section is visible, initializing...');
+            initDXTerminal();
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the section is visible
+        rootMargin: '50px' // Start loading 50px before it comes into view
+      }
+    );
+    
+    observer.observe(terminalSection);
+    dxTerminalObserver = observer;
   }
 
-  // Start typing on load
-  setTimeout(typeCommand, 1000);
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupDXTerminalObserver);
+  } else {
+    // DOM is already loaded
+    setTimeout(setupDXTerminalObserver, 100);
+  }
 
-  // Handle click and Enter key
-  pressEnterEl.addEventListener("click", showCode);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && pressEnterOverlayEl.style.display === "flex") {
-      showCode();
-    }
+  // Also try when the page is fully loaded
+  window.addEventListener('load', function() {
+    setTimeout(setupDXTerminalObserver, 500);
   });
 }
-
-// Setup intersection observer for lazy loading
-function setupDXTerminalObserver() {
-  const terminalSection = document.querySelector('.developer-experience-section');
-  
-  if (!terminalSection) {
-    // Try again later if section not ready
-    setTimeout(setupDXTerminalObserver, 100);
-    return;
-  }
-  
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !dxTerminalInitialized) {
-          console.log('DX Terminal section is visible, initializing...');
-          initDXTerminal();
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      threshold: 0.1, // Trigger when 10% of the section is visible
-      rootMargin: '50px' // Start loading 50px before it comes into view
-    }
-  );
-  
-  observer.observe(terminalSection);
-  dxTerminalObserver = observer;
-}
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupDXTerminalObserver);
-} else {
-  // DOM is already loaded
-  setTimeout(setupDXTerminalObserver, 100);
-}
-
-// Also try when the page is fully loaded
-window.addEventListener('load', function() {
-  setTimeout(setupDXTerminalObserver, 500);
-});
 </script>
